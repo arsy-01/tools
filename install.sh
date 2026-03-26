@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# GANTI URL DI BAWAH INI dengan hasil copy-paste link GitHub Anda (tanpa /Deltaa.apk di akhirnya)
 BASE_URL="https://github.com/arsy-01/main/releases/download/delta"
 
 install_apk() {
@@ -11,18 +12,21 @@ install_apk() {
     clear
     echo "[*] Mengunduh $APK_NAME..."
     rm -f "$FILE_PATH"
-    curl -L -# -o "$FILE_PATH" "${BASE_URL}/${APK_NAME}"
-
-    if [ -f "$FILE_PATH" ]; then
+    
+    # Tambahan -f agar curl langsung gagal jika URL salah (404 Not Found)
+    if curl -f -L -# -o "$FILE_PATH" "${BASE_URL}/${APK_NAME}"; then
         echo "[*] Memverifikasi dan menginstal..."
-        INSTALL_STATUS=$(su -c "pm install -r $FILE_PATH" < /dev/null 2>&1)
+        INSTALL_STATUS=$(su -c "pm install -r \"$FILE_PATH\"" < /dev/null 2>&1)
+        
         if [[ "$INSTALL_STATUS" == *"Success"* ]]; then
             echo "[v] BERHASIL! $APK_NAME terinstal."
         else
             echo "[X] GAGAL MENGINSTAL! Error: $INSTALL_STATUS"
         fi
     else
-        echo "[!] ERROR: Gagal mengunduh $APK_NAME."
+        echo "[X] ERROR: Gagal mengunduh $APK_NAME."
+        echo "    Pastikan BASE_URL di script sudah benar!"
+        rm -f "$FILE_PATH" # Menghapus file sampah 404
     fi
     
     if [ "$PAUSE" == "true" ]; then
@@ -74,4 +78,5 @@ apk_menu() {
     done
 }
 
+# Jalankan menu instalasi
 apk_menu

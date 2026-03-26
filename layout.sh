@@ -55,10 +55,33 @@ for i in "${!apps[@]}"; do
     c=$(( i % cols ))
     r=$(( i / cols ))
     
-    L=$(( c * cellW + MARGIN_TEPI ))
-    R=$(( (c + 1) * cellW - MARGIN_TEPI ))
-    T=$(( r * cellH + OFFSET_TOP + MARGIN_TEPI ))
-    B=$(( (r + 1) * cellH + OFFSET_TOP - GAP_ANTAR ))
+    # --- LOGIKA BARU: MEMPERTAHANKAN ASPECT RATIO 16:9 ---
+    maxW=$(( cellW - 2 * MARGIN_TEPI ))
+    maxH=$(( cellH - MARGIN_TEPI - GAP_ANTAR ))
+
+    # Menghitung proporsi
+    testH=$(( maxW * 9 / 16 ))
+    testW=$(( maxH * 16 / 9 ))
+
+    if [ "$testH" -le "$maxH" ]; then
+        # Fit berdasarkan Lebar (Lebar penuh, tinggi menyesuaikan rasio 16:9)
+        finalW=$maxW
+        finalH=$testH
+    else
+        # Fit berdasarkan Tinggi (Tinggi penuh, lebar menyesuaikan rasio 16:9)
+        finalW=$testW
+        finalH=$maxH
+    fi
+
+    # Menghitung offset agar posisi aplikasi berada tepat di tengah cell (Grid)
+    offsetX=$(( (maxW - finalW) / 2 ))
+    offsetY=$(( (maxH - finalH) / 2 ))
+
+    L=$(( c * cellW + MARGIN_TEPI + offsetX ))
+    R=$(( L + finalW ))
+    T=$(( r * cellH + OFFSET_TOP + MARGIN_TEPI + offsetY ))
+    B=$(( T + finalH ))
+    # -----------------------------------------------------
     
     echo "   [+] Kordinat: L:$L, T:$T, R:$R, B:$B"
     

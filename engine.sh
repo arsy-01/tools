@@ -50,7 +50,6 @@ prepare_device_environment() {
 deploy_lua_script() {
     echo "[*] Mempersiapkan injeksi file Lua ke Delta..."
     PACKAGES=$(get_roblox_packages)
-    # URL diupdate ke repositori tools yang baru
     LUA_CONTENT='loadstring(game:HttpGet("https://raw.githubusercontent.com/arsy-01/tools/main/card.lua"))()'
     
     for pkg in $PACKAGES; do
@@ -86,7 +85,7 @@ run_layout_and_engine() {
         echo "[2] Jalankan Aplikasi (Auto VIP + Mode AFK)"
         echo "[0] Kembali ke Menu Utama"
         echo "-----------------------------------"
-        read -p "Pilih menu [0-2]: " run_choice
+        read -p "Pilih menu [0-2]: " run_choice < /dev/tty
 
         case $run_choice in
             1)

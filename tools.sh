@@ -1,2 +1,96 @@
 #!/bin/bash
-echo "IyEvYmluL2Jhc2gKCiMgS29uZmlndXJhc2kgVVJMIFJlcG9zaXRvcmkgQmFydQpSRVBPX1VSTD0iaHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2Fyc3ktMDEvdG9vbHMvbWFpbiIKQ09ORklHX0ZJTEU9Ii9zZGNhcmQvRG93bmxvYWQvLnZpcF9saW5rX2Fyc3kudHh0IgoKIyBGdW5nc2kgdW50dWsgbWVuZGFwYXRrYW4gZGFmdGFyIHBhY2thZ2UgUm9ibG94CmdldF9yb2Jsb3hfcGFja2FnZXMoKSB7CiAgICBzdSAtYyAncG0gbGlzdCBwYWNrYWdlcycgfCBncmVwIC1pICdyb2Jsb3gnIHwgYXdrIC1GJzonICd7cHJpbnQgJDJ9JyB8IHRyIC1kICdccicKfQoKaW5wdXRfdmlwX2xpbmsoKSB7CiAgICBjbGVhcgogICAgZWNobyAiLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0iCiAgICBlY2hvICIgICAgICAgSU5QVVQgUFJJVkFURSBTRVJWRVIgICAgICAgICIKICAgIGVjaG8gIi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tIgogICAgbG9jYWwgY3VycmVudF9saW5rPSIiCiAgICBpZiBbIC1mICIkQ09ORklHX0ZJTEUiIF07IHRoZW4gY3VycmVudF9saW5rPSQoY2F0ICIkQ09ORklHX0ZJTEUiKTsgZmkKICAgIGVjaG8gIkxpbmsgU2FhdCBJbmk6ICR7Y3VycmVudF9saW5rOi1bS09TT05HXX0iCiAgICBlY2hvICIiCiAgICByZWFkIC1wICJNYXN1a2thbiBQcml2YXRlIFNlcnZlciBMaW5rOiAiIG5ld19saW5rCiAgICAKICAgIGlmIFsgLW4gIiRuZXdfbGluayIgXTsgdGhlbgogICAgICAgIGVjaG8gIiRuZXdfbGluayIgPiAiJENPTkZJR19GSUxFIgogICAgICAgIGVjaG8gIlsrXSBMaW5rIGJlcmhhc2lsIGRpc2ltcGFuISIKICAgIGVsc2UKICAgICAgICBlY2hvICJbIV0gSW5wdXQga29zb25nLCBkaWJhdGFsa2FuLiIKICAgIGZpCiAgICBzbGVlcCAyCn0KCmlucHV0X2RlbHRhX2tleSgpIHsKICAgIGNsZWFyCiAgICBlY2hvICItLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSIKICAgIGVjaG8gIiAgICAgICAgICBJTlBVVCBERUxUQSBLRVkgICAgICAgICAgIgogICAgZWNobyAiLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0iCiAgICByZWFkIC1wICJNYXN1a2thbiBEZWx0YSBLZXk6ICIgZGVsdGFfa2V5CgogICAgaWYgWyAtbiAiJGRlbHRhX2tleSIgXTsgdGhlbgogICAgICAgIGVjaG8gIlsqXSBNZW5kZXRla3NpIGFwbGlrYXNpIFJvYmxveC4uLiIKICAgICAgICBQQUNLQUdFUz0kKGdldF9yb2Jsb3hfcGFja2FnZXMpCiAgICAgICAgCiAgICAgICAgaWYgWyAteiAiJFBBQ0tBR0VTIiBdOyB0aGVuCiAgICAgICAgICAgIGVjaG8gIlshXSBUaWRhayBhZGEgYXBsaWthc2kgUm9ibG94IHlhbmcgdGVyZGV0ZWtzaSEiCiAgICAgICAgZWxzZQogICAgICAgICAgICBmb3IgcGtnIGluICRQQUNLQUdFUzsgZG8KICAgICAgICAgICAgICAgIGVjaG8gIiAtPiBNZW5lcmFwa2FuIGtleSBrZSAkcGtnLi4uIgogICAgICAgICAgICAgICAgVEFSR0VUX0RJUj0iL3NkY2FyZC9BbmRyb2lkL2RhdGEvJHBrZy9maWxlcy9nbG9vcC9leHRlcm5hbC9JbnRlcm5hbHMvQ2FjaGUiCiAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICMgTWVtYXN0aWthbiBmb2xkZXIgY2FjaGUgYWRhIChtZW1idWF0bnlhIGppa2EgYmVsdW0gYWRhKQogICAgICAgICAgICAgICAgc3UgLWMgIm1rZGlyIC1wIFwiJFRBUkdFVF9ESVJcIiIKICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgIyBNZW51bGlzIGtleSBrZSBkYWxhbSBmaWxlIGxpY2Vuc2UKICAgICAgICAgICAgICAgIHN1IC1jICJlY2hvICckZGVsdGFfa2V5JyA+IFwiJFRBUkdFVF9ESVIvbGljZW5zZVwiIgogICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICBlY2hvICIgICAgW3ZdIEtleSBiZXJoYXNpbCBkaXNhbGluIGtlICRwa2ciCiAgICAgICAgICAgIGRvbmUKICAgICAgICAgICAgZWNobyAiIgogICAgICAgICAgICBlY2hvICJbK10gU2VsZXNhaSEgRGVsdGEgS2V5IHRlbGFoIGRpdGVyYXBrYW4ga2Ugc2VtdWEgYXBsaWthc2kuIgogICAgICAgIGZpCiAgICBlbHNlCiAgICAgICAgZWNobyAiWyFdIElucHV0IGtvc29uZywgZGliYXRhbGthbi4iCiAgICBmaQogICAgZWNobyAiIgogICAgcmVhZCAtcCAiVGVrYW4gW0VOVEVSXSB1bnR1ayBrZW1iYWxpLi4uIiBkdW1teSA8IC9kZXYvdHR5Cn0KCndoaWxlIHRydWU7IGRvCiAgICBjbGVhcgogICAgZWNobyAiLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0iCiAgICBlY2hvICIgICAgICAgICAgICAgTUVOVSBVVEFNQSAgICAgICAgICAgICIKICAgIGVjaG8gIi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tIgogICAgZWNobyAiWzFdIEluc3RhbGwgQVBLIgogICAgZWNobyAiWzJdIFByaXZhdGUgU2VydmVyIExpbmsiCiAgICBlY2hvICJbM10gU2V0dXAgICYgIFJ1biIKICAgIGVjaG8gIls0XSBEZWx0YSBLZXkiCiAgICBlY2hvICJbMF0gS2VsdWFyIgogICAgZWNobyAiLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0iCiAgICAKICAgIFNUQVRVU19MSU5LPSJbS09TT05HXSIKICAgIGlmIFsgLWYgIiRDT05GSUdfRklMRSIgXTsgdGhlbiBTVEFUVVNfTElOSz0iW1RlcmlzaV0iOyBmaQogICAgZWNobyAiKiBTdGF0dXMgUHJpdmF0ZSBMaW5rOiAkU1RBVFVTX0xJTksiCiAgICBlY2hvICItLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSIKICAgIAogICAgcmVhZCAtcCAiUGlsaWggbWVudSBbMC00XTogIiBtYWluX2Nob2ljZQoKICAgIGNhc2UgJG1haW5fY2hvaWNlIGluCiAgICAgICAgMSkgY3VybCAtc0wgIiRSRVBPX1VSTC9pbnN0YWxsLnNoIiB8IGJhc2ggOzsKICAgICAgICAyKSBpbnB1dF92aXBfbGluayA7OwogICAgICAgIDMpIGN1cmwgLXNMICIkUkVQT19VUkwvZW5naW5lLnNoIiB8IGJhc2ggOzsKICAgICAgICA0KSBpbnB1dF9kZWx0YV9rZXkgOzsKICAgICAgICAwKSBjbGVhcjsgZXhpdCAwIDs7CiAgICAgICAgKikgZWNobyAiWyFdIFBpbGloYW4gdGlkYWsgdmFsaWQiOyBzbGVlcCAxIDs7CiAgICBlc2FjCmRvbmU=" | base64 -d | bash
+
+# Konfigurasi URL Repositori Baru
+REPO_URL="https://raw.githubusercontent.com/arsy-01/tools/main"
+CONFIG_FILE="/sdcard/Download/.vip_link_arsy.txt"
+
+# Fungsi untuk mendapatkan daftar package Roblox
+get_roblox_packages() {
+    su -c 'pm list packages' | grep -i 'roblox' | awk -F':' '{print $2}' | tr -d '\r'
+}
+
+input_vip_link() {
+    clear
+    echo "-----------------------------------"
+    echo "       INPUT PRIVATE SERVER        "
+    echo "-----------------------------------"
+    local current_link=""
+    if [ -f "$CONFIG_FILE" ]; then current_link=$(cat "$CONFIG_FILE"); fi
+    echo "Link Saat Ini: ${current_link:-[KOSONG]}"
+    echo ""
+    read -p "Masukkan Private Server Link: " new_link < /dev/tty
+    
+    if [ -n "$new_link" ]; then
+        echo "$new_link" > "$CONFIG_FILE"
+        echo "[+] Link berhasil disimpan!"
+    else
+        echo "[!] Input kosong, dibatalkan."
+    fi
+    sleep 2
+}
+
+input_delta_key() {
+    clear
+    echo "-----------------------------------"
+    echo "          INPUT DELTA KEY          "
+    echo "-----------------------------------"
+    read -p "Masukkan Delta Key: " delta_key < /dev/tty
+
+    if [ -n "$delta_key" ]; then
+        echo "[*] Mendeteksi aplikasi Roblox..."
+        PACKAGES=$(get_roblox_packages)
+        
+        if [ -z "$PACKAGES" ]; then
+            echo "[!] Tidak ada aplikasi Roblox yang terdeteksi!"
+        else
+            for pkg in $PACKAGES; do
+                echo " -> Menerapkan key ke $pkg..."
+                TARGET_DIR="/sdcard/Android/data/$pkg/files/gloop/external/Internals/Cache"
+                
+                # Memastikan folder cache ada (membuatnya jika belum ada)
+                su -c "mkdir -p \"$TARGET_DIR\""
+                
+                # Menulis key ke dalam file license
+                su -c "echo '$delta_key' > \"$TARGET_DIR/license\""
+                
+                echo "    [v] Key berhasil disalin ke $pkg"
+            done
+            echo ""
+            echo "[+] Selesai! Delta Key telah diterapkan ke semua aplikasi."
+        fi
+    else
+        echo "[!] Input kosong, dibatalkan."
+    fi
+    echo ""
+    read -p "Tekan [ENTER] untuk kembali..." dummy < /dev/tty
+}
+
+while true; do
+    clear
+    echo "-----------------------------------"
+    echo "             MENU UTAMA            "
+    echo "-----------------------------------"
+    echo "[1] Install APK"
+    echo "[2] Private Server Link"
+    echo "[3] Setup  &  Run"
+    echo "[4] Delta Key"
+    echo "[0] Keluar"
+    echo "-----------------------------------"
+    
+    STATUS_LINK="[KOSONG]"
+    if [ -f "$CONFIG_FILE" ]; then STATUS_LINK="[Terisi]"; fi
+    echo "* Status Private Link: $STATUS_LINK"
+    echo "-----------------------------------"
+    
+    # Tambahan < /dev/tty agar tidak error saat dipanggil
+    read -p "Pilih menu [0-4]: " main_choice < /dev/tty
+
+    case $main_choice in
+        1) curl -sL "$REPO_URL/install.sh" | bash ;;
+        2) input_vip_link ;;
+        3) curl -sL "$REPO_URL/engine.sh" | bash ;;
+        4) input_delta_key ;;
+        0) clear; exit 0 ;;
+        *) echo "[!] Pilihan tidak valid"; sleep 1 ;;
+    esac
+done

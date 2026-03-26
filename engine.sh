@@ -101,14 +101,8 @@ run_layout_and_engine() {
                 sleep 2
 
                 deploy_lua_script
-
-                echo "[*] Membuka semua aplikasi untuk Login..."
-                for pkg in $PACKAGES; do
-                    echo " -> Membuka $pkg..."
-                    su -c "monkey -p $pkg -c android.intent.category.LAUNCHER 1 > /dev/null 2>&1"
-                    sleep 3
-                done
                 
+                # Command "monkey" dihapus dari sini. Langsung eksekusi layout.
                 execute_layout
                 
                 echo ""
@@ -133,19 +127,14 @@ run_layout_and_engine() {
                 echo "[*] TAHAP 2: Deploy Lua Script..."
                 deploy_lua_script
 
-                echo "[*] TAHAP 3: Membuka aplikasi secara normal..."
-                for pkg in $PACKAGES; do
-                    su -c "monkey -p $pkg -c android.intent.category.LAUNCHER 1 > /dev/null 2>&1"
-                    sleep 3
-                done
-
-                echo "[*] TAHAP 4: Mengeksekusi Layout Grid dari GitHub..."
+                echo "[*] TAHAP 3: Mengeksekusi Layout Grid dari GitHub..."
+                # Command "monkey" dihapus dari sini juga.
                 execute_layout
                 
                 echo "    Menunggu 15 detik agar aplikasi me-reload di mode Grid..."
                 sleep 15 
 
-                echo "[*] TAHAP 5: Menembakkan Link VIP..."
+                echo "[*] TAHAP 4: Menembakkan Link VIP..."
                 for pkg in $PACKAGES; do
                     echo " -> Injecting VIP ke $pkg..."
                     su -c "am start --windowingMode 5 -a android.intent.action.VIEW -d \"$VIP_LINK\" $pkg > /dev/null 2>&1"

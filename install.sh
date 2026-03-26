@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Catatan: Jika base link download juga berubah, silakan sesuaikan URL di bawah ini.
 BASE_URL="https://github.com/arsy-01/main/releases/download/delta"
 
 install_apk() {
@@ -50,7 +49,7 @@ apk_menu() {
         echo "[7] Install All"
         echo "[0] Kembali ke Menu Utama"
         echo "-----------------------------------"
-        read -p "Pilih APK [0-7]: " apk_choice
+        read -p "Pilih APK [0-7]: " apk_choice < /dev/tty
 
         case $apk_choice in
             1) install_apk "Deltaa.apk" "4d92bfdcf2124b567cf29eb0b5e1eb3ba52bcc14304d1ede729fe4fcd3775378" "true" ;;
@@ -75,5 +74,4 @@ apk_menu() {
     done
 }
 
-# Jalankan menu instalasi
 apk_menu

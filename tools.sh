@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 # Konfigurasi URL Repositori Baru
@@ -19,7 +18,7 @@ input_vip_link() {
     if [ -f "$CONFIG_FILE" ]; then current_link=$(cat "$CONFIG_FILE"); fi
     echo "Link Saat Ini: ${current_link:-[KOSONG]}"
     echo ""
-    read -p "Masukkan Private Server Link: " new_link
+    read -p "Masukkan Private Server Link: " new_link < /dev/tty
     
     if [ -n "$new_link" ]; then
         echo "$new_link" > "$CONFIG_FILE"
@@ -35,7 +34,7 @@ input_delta_key() {
     echo "-----------------------------------"
     echo "          INPUT DELTA KEY          "
     echo "-----------------------------------"
-    read -p "Masukkan Delta Key: " delta_key
+    read -p "Masukkan Delta Key: " delta_key < /dev/tty
 
     if [ -n "$delta_key" ]; then
         echo "[*] Mendeteksi aplikasi Roblox..."
@@ -83,7 +82,7 @@ while true; do
     echo "* Status Private Link: $STATUS_LINK"
     echo "-----------------------------------"
     
-    read -p "Pilih menu [0-4]: " main_choice
+    read -p "Pilih menu [0-4]: " main_choice < /dev/tty
 
     case $main_choice in
         1) curl -sL "$REPO_URL/install.sh" | bash ;;

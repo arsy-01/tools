@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # GANTI URL DI BAWAH INI dengan hasil copy-paste link GitHub Anda (tanpa /Deltaa.apk di akhirnya)
-BASE_URL="https://github.com/arsy-01/main/releases/download/delta"
+BASE_URL="https://github.com/arsy-01/tools/releases/download/delta"
 
 install_apk() {
     APK_NAME=$1

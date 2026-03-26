@@ -40,7 +40,7 @@ cellH=$(( H_USABLE / rows ))
 MARGIN_TEPI=2
 GAP_ANTAR=2
 
-echo "[+] Resolusi: ${W}x${H} | Grid: ${cols}x${rows}"
+echo "[+] Resolusi: ${W}x${H} | Grid: ${cols}x${rows} | Total App: ${count}"
 
 for i in "${!apps[@]}"; do
     app=${apps[$i]}
@@ -55,33 +55,40 @@ for i in "${!apps[@]}"; do
     c=$(( i % cols ))
     r=$(( i / cols ))
     
-    # --- LOGIKA BARU: MEMPERTAHANKAN ASPECT RATIO 16:9 ---
-    maxW=$(( cellW - 2 * MARGIN_TEPI ))
-    maxH=$(( cellH - MARGIN_TEPI - GAP_ANTAR ))
+    # --- LOGIKA AUTO-SWITCHING LAYOUT ---
+    if [ "$count" -le 4 ]; then
+        # JIKA APP 1 SAMPAI 4: Gunakan rasio proporsional (16:9)
+        maxW=$(( cellW - 2 * MARGIN_TEPI ))
+        maxH=$(( cellH - MARGIN_TEPI - GAP_ANTAR ))
 
-    # Menghitung proporsi
-    testH=$(( maxW * 9 / 16 ))
-    testW=$(( maxH * 16 / 9 ))
+        testH=$(( maxW * 9 / 16 ))
+        testW=$(( maxH * 16 / 9 ))
 
-    if [ "$testH" -le "$maxH" ]; then
-        # Fit berdasarkan Lebar (Lebar penuh, tinggi menyesuaikan rasio 16:9)
-        finalW=$maxW
-        finalH=$testH
+        if [ "$testH" -le "$maxH" ]; then
+            finalW=$maxW
+            finalH=$testH
+        else
+            finalW=$testW
+            finalH=$maxH
+        fi
+
+        offsetX=$(( (maxW - finalW) / 2 ))
+        offsetY=$(( (maxH - finalH) / 2 ))
+
+        L=$(( c * cellW + MARGIN_TEPI + offsetX ))
+        R=$(( L + finalW ))
+        T=$(( r * cellH + OFFSET_TOP + MARGIN_TEPI + offsetY ))
+        B=$(( T + finalH ))
+        echo "   [!] Mode: Proporsional (16:9)"
     else
-        # Fit berdasarkan Tinggi (Tinggi penuh, lebar menyesuaikan rasio 16:9)
-        finalW=$testW
-        finalH=$maxH
+        # JIKA APP 5, 6 ATAU LEBIH: Gunakan layar penuh (Penuhi cell grid)
+        L=$(( c * cellW + MARGIN_TEPI ))
+        R=$(( (c + 1) * cellW - MARGIN_TEPI ))
+        T=$(( r * cellH + OFFSET_TOP + MARGIN_TEPI ))
+        B=$(( (r + 1) * cellH + OFFSET_TOP - GAP_ANTAR ))
+        echo "   [!] Mode: Full Cell (Maksimal Ruang)"
     fi
-
-    # Menghitung offset agar posisi aplikasi berada tepat di tengah cell (Grid)
-    offsetX=$(( (maxW - finalW) / 2 ))
-    offsetY=$(( (maxH - finalH) / 2 ))
-
-    L=$(( c * cellW + MARGIN_TEPI + offsetX ))
-    R=$(( L + finalW ))
-    T=$(( r * cellH + OFFSET_TOP + MARGIN_TEPI + offsetY ))
-    B=$(( T + finalH ))
-    # -----------------------------------------------------
+    # ------------------------------------
     
     echo "   [+] Kordinat: L:$L, T:$T, R:$R, B:$B"
     

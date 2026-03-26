@@ -47,11 +47,15 @@ input_delta_key() {
                 echo " -> Menerapkan key ke $pkg..."
                 TARGET_DIR="/sdcard/Android/data/$pkg/files/gloop/external/Internals/Cache"
                 
-                # Memastikan folder cache ada (membuatnya jika belum ada)
+                # Memastikan folder cache ada dan memberi hak akses penuh
                 su -c "mkdir -p \"$TARGET_DIR\""
+                su -c "chmod 777 \"$TARGET_DIR\""
                 
-                # Menulis key ke dalam file license
-                su -c "echo '$delta_key' > \"$TARGET_DIR/license\""
+                # Menggunakan printf agar TIDAK ADA karakter 'enter' (newline) tambahan di akhir key
+                su -c "printf '%s' '$delta_key' > \"$TARGET_DIR/license\""
+                
+                # Memberi izin baca agar aplikasi Roblox tidak diblokir saat mengakses file ini
+                su -c "chmod 777 \"$TARGET_DIR/license\""
                 
                 echo "    [v] Key berhasil disalin ke $pkg"
             done

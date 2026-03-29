@@ -18,7 +18,7 @@ input_vip_link() {
     if [ -f "$CONFIG_FILE" ]; then current_link=$(cat "$CONFIG_FILE"); fi
     echo "Link Saat Ini: ${current_link:-[KOSONG]}"
     echo ""
-    read -p "Masukkan Private Server Link: " new_link < /dev/tty
+    read -p "Masukkan Private Server Link: " new_link
     
     if [ -n "$new_link" ]; then
         echo "$new_link" > "$CONFIG_FILE"
@@ -34,7 +34,7 @@ input_delta_key() {
     echo "-----------------------------------"
     echo "          INPUT DELTA KEY          "
     echo "-----------------------------------"
-    read -p "Masukkan Delta Key: " delta_key < /dev/tty
+    read -p "Masukkan Delta Key: " delta_key
 
     if [ -n "$delta_key" ]; then
         echo "[*] Mendeteksi aplikasi Roblox..."
@@ -51,10 +51,10 @@ input_delta_key() {
                 su -c "mkdir -p \"$TARGET_DIR\""
                 su -c "chmod 777 \"$TARGET_DIR\""
                 
-                # Menggunakan printf agar TIDAK ADA karakter 'enter' (newline) tambahan di akhir key
-                su -c "printf '%s' '$delta_key' > \"$TARGET_DIR/license\""
+                # MENGGUNAKAN PIPE: Ini 100% kebal terhadap karakter aneh pada Key
+                printf "%s" "$delta_key" | su -c "cat > \"$TARGET_DIR/license\""
                 
-                # Memberi izin baca agar aplikasi Roblox tidak diblokir saat mengakses file ini
+                # Memberi izin baca agar aplikasi Roblox tidak diblokir
                 su -c "chmod 777 \"$TARGET_DIR/license\""
                 
                 echo "    [v] Key berhasil disalin ke $pkg"
@@ -66,7 +66,7 @@ input_delta_key() {
         echo "[!] Input kosong, dibatalkan."
     fi
     echo ""
-    read -p "Tekan [ENTER] untuk kembali..." dummy < /dev/tty
+    read -p "Tekan [ENTER] untuk kembali..." dummy
 }
 
 while true; do
@@ -86,7 +86,7 @@ while true; do
     echo "* Status Private Link: $STATUS_LINK"
     echo "-----------------------------------"
     
-    read -p "Pilih menu [0-4]: " main_choice < /dev/tty
+    read -p "Pilih menu [0-4]: " main_choice
 
     case $main_choice in
         1) curl -sL "$REPO_URL/install.sh" | bash ;;

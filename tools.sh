@@ -4,11 +4,6 @@
 REPO_URL="https://raw.githubusercontent.com/arsy-01/tools/main"
 CONFIG_FILE="/sdcard/Download/.vip_link_arsy.txt"
 
-# Fungsi untuk mendapatkan daftar package Roblox
-get_roblox_packages() {
-    su -c 'pm list packages' | grep -i 'roblox' | awk -F':' '{print $2}' | tr -d '\r'
-}
-
 input_vip_link() {
     clear
     echo "-----------------------------------"
@@ -18,7 +13,7 @@ input_vip_link() {
     if [ -f "$CONFIG_FILE" ]; then current_link=$(cat "$CONFIG_FILE"); fi
     echo "Link Saat Ini: ${current_link:-[KOSONG]}"
     echo ""
-    read -p "Masukkan Private Server Link: " new_link
+    read -p "Masukkan Private Server Link: " new_link < /dev/tty
     
     if [ -n "$new_link" ]; then
         echo "$new_link" > "$CONFIG_FILE"
@@ -34,30 +29,29 @@ input_delta_key() {
     echo "-----------------------------------"
     echo "          INPUT DELTA KEY          "
     echo "-----------------------------------"
-    read -p "Masukkan Delta Key: " delta_key
+    read -p "Masukkan Delta Key: " delta_key < /dev/tty
 
     if [ -n "$delta_key" ]; then
-        echo "[*] Mendeteksi aplikasi Roblox..."
-        PACKAGES=$(get_roblox_packages)
+        echo "[*] Mencari folder Roblox..."
+        BASE_DIR="/storage/emulated/0/Android/data"
         
-        if [ -z "$PACKAGES" ]; then
-            echo "[!] Tidak ada aplikasi Roblox yang terdeteksi!"
+        # Mencari folder Roblox langsung tanpa menggunakan 'su' (seperti script Kaeru)
+        ROBLOX_DIRS=$(ls -d $BASE_DIR/com.roblox.clien* 2>/dev/null)
+        
+        if [ -z "$ROBLOX_DIRS" ]; then
+            echo "[!] Tidak ada folder aplikasi Roblox yang terdeteksi!"
         else
-            for pkg in $PACKAGES; do
-                echo " -> Menerapkan key ke $pkg..."
-                TARGET_DIR="/sdcard/Android/data/$pkg/files/gloop/external/Internals/Cache"
+            for dir in $ROBLOX_DIRS; do
+                pkg_name=$(basename "$dir")
+                echo " -> Menerapkan key ke $pkg_name..."
                 
-                # Memastikan folder cache ada dan memberi hak akses penuh
-                su -c "mkdir -p \"$TARGET_DIR\""
-                su -c "chmod 777 \"$TARGET_DIR\""
+                TARGET_DIR="$dir/files/gloop/external/Internals/Cache"
                 
-                # MENGGUNAKAN PIPE: Ini 100% kebal terhadap karakter aneh pada Key
-                printf "%s" "$delta_key" | su -c "cat > \"$TARGET_DIR/license\""
+                # Membuat folder dan menulis key langsung secara murni
+                mkdir -p "$TARGET_DIR"
+                printf "%s" "$delta_key" > "$TARGET_DIR/license"
                 
-                # Memberi izin baca agar aplikasi Roblox tidak diblokir
-                su -c "chmod 777 \"$TARGET_DIR/license\""
-                
-                echo "    [v] Key berhasil disalin ke $pkg"
+                echo "    [v] Key berhasil disalin!"
             done
             echo ""
             echo "[+] Selesai! Delta Key telah diterapkan ke semua aplikasi."
@@ -66,7 +60,8 @@ input_delta_key() {
         echo "[!] Input kosong, dibatalkan."
     fi
     echo ""
-    read -p "Tekan [ENTER] untuk kembali..." dummy
+    # Tombol enter dijamin aman
+    read -p "Tekan [ENTER] untuk kembali..." dummy < /dev/tty
 }
 
 while true; do
@@ -86,7 +81,7 @@ while true; do
     echo "* Status Private Link: $STATUS_LINK"
     echo "-----------------------------------"
     
-    read -p "Pilih menu [0-4]: " main_choice
+    read -p "Pilih menu [0-4]: " main_choice < /dev/tty
 
     case $main_choice in
         1) curl -sL "$REPO_URL/install.sh" | bash ;;

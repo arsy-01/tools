@@ -1,24 +1,25 @@
 local CoreGui = game:GetService("CoreGui")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
+local Workspace = game:GetService("Workspace")
 
 -- Pelindung GUI
 local targetGui = (gethui and gethui()) or CoreGui
 
--- 1. SETUP UI MENU UTAMA (Dibuat Lebih Kecil)
+-- 1. SETUP UI MENU UTAMA
 local MainGui = Instance.new("ScreenGui")
 MainGui.Name = "MatrixControl"
 MainGui.Parent = targetGui
 MainGui.ResetOnSpawn = false
-MainGui.IgnoreGuiInset = true -- Memastikan efek menutupi seluruh layar
+MainGui.IgnoreGuiInset = true 
 
 local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 100, 0, 30) -- Ukuran diperkecil
+MainFrame.Size = UDim2.new(0, 100, 0, 30) 
 MainFrame.Position = UDim2.new(0.5, -50, 0.1, 0)
 MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 MainFrame.BorderSizePixel = 1
 MainFrame.BorderColor3 = Color3.fromRGB(0, 255, 0)
-MainFrame.Active = true -- Penting: Mencegah sentuhan tembus ke layar game (kamera tidak ikut geser)
+MainFrame.Active = true 
 MainFrame.ZIndex = 10
 MainFrame.Parent = MainGui
 
@@ -28,11 +29,11 @@ ToggleBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 ToggleBtn.Text = "FX: OFF"
 ToggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 ToggleBtn.Font = Enum.Font.SourceSansBold
-ToggleBtn.TextSize = 12 -- Font diperkecil
+ToggleBtn.TextSize = 12 
 ToggleBtn.ZIndex = 11
 ToggleBtn.Parent = MainFrame
 
--- 2. CUSTOM DRAG SYSTEM (Agar kamera game tidak ikut muter saat UI digeser)
+-- 2. CUSTOM DRAG SYSTEM
 local dragging, dragInput, dragStart, startPos
 
 MainFrame.InputBegan:Connect(function(input)
@@ -65,7 +66,7 @@ end)
 -- 3. FUNGSI MATRIX EFFECT
 local matrixContainer = nil
 local isRunning = false
-local currentRunId = 0 -- Digunakan untuk mencegah konflik jika tombol ditekan berkali-kali
+local currentRunId = 0 
 local chars = "01"
 
 local function getRandomText(len)
@@ -101,12 +102,16 @@ local function startMatrix()
     ToggleBtn.BackgroundColor3 = Color3.fromRGB(0, 100, 0)
     ToggleBtn.TextColor3 = Color3.fromRGB(0, 255, 0)
 
-    -- Container Efek
     matrixContainer = Instance.new("Frame")
     matrixContainer.Size = UDim2.new(1, 0, 1, 0)
     matrixContainer.BackgroundTransparency = 1
-    matrixContainer.ZIndex = 0 -- Pastikan berada di belakang UI tombol
+    matrixContainer.ZIndex = 0 
     matrixContainer.Parent = MainGui
+
+    -- --- KALKULASI UKURAN FONT DINAMIS ---
+    local viewportSize = Workspace.CurrentCamera.ViewportSize
+    -- Mengambil sekitar 3.5% dari tinggi layar, lalu dibatasi antara 12 dan 35 agar tidak ekstrim
+    local dynamicTextSize = math.clamp(math.floor(viewportSize.Y * 0.035), 12, 35)
 
     local columns = 15 
     local labels = {}
@@ -117,7 +122,7 @@ local function startMatrix()
         lbl.BackgroundTransparency = 1
         lbl.TextColor3 = Color3.fromRGB(0, 255, 0)
         lbl.Font = Enum.Font.Code
-        lbl.TextSize = 16
+        lbl.TextSize = dynamicTextSize -- Menggunakan variabel yang sudah dikalkulasi
         lbl.ZIndex = 1
         lbl.Position = UDim2.new((i-1)/columns, 0, math.random(-100, 0)/100, 0)
         lbl.Text = getRandomText(20)
@@ -142,7 +147,6 @@ local function startMatrix()
 
     -- Auto-Off setelah 5 detik
     task.delay(5, function()
-        -- Pastikan hanya mematikan jika belum dimatikan manual
         if currentRunId == thisRun then
             stopMatrix()
         end

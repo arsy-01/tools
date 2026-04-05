@@ -31,7 +31,7 @@ while [ $((cols * cols)) -lt "$count" ]; do
 done
 rows=$(( (count + cols - 1) / cols ))
 
-OFFSET_TOP=35
+OFFSET_TOP=5
 H_USABLE=$(( H - OFFSET_TOP ))
 
 cellW=$(( W / cols ))

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Konfigurasi Repository (Tanpa perlu menulis base URL panjang)
+# Konfigurasi Repository Utama Anda
 REPO="arsy-01/tools"
 
 install_apk() {
@@ -12,7 +12,6 @@ install_apk() {
     echo "[*] Mengunduh $APK_NAME..."
     rm -f "$FILE_PATH"
     
-    # Download langsung menggunakan URL dari API GitHub
     if curl -f -L -# -o "$FILE_PATH" "$DOWNLOAD_URL"; then
         echo "[*] Memverifikasi dan menginstal..."
         INSTALL_STATUS=$(su -c "pm install -r \"$FILE_PATH\"" < /dev/null 2>&1)
@@ -36,51 +35,41 @@ install_apk() {
     fi
 }
 
-# --- FUNGSI CERDAS: MEMBACA FOLDER GITHUB SECARA OTOMATIS ---
+# --- FUNGSI TINGKAT 2: MEMBACA ISI FILE DALAM FOLDER ---
 menu_apk_list() {
     local TAG=$1
-    local TAG_NAME=$2
     
     clear
     echo "-----------------------------------"
-    echo "    MEMUAT DATA DARI GITHUB...     "
+    echo "    MEMUAT DATA DARI FOLDER '$TAG' "
     echo "-----------------------------------"
     
-    # 1. Menghubungi API GitHub untuk mengambil daftar isi folder (Release Tag)
     API_URL="https://api.github.com/repos/$REPO/releases/tags/$TAG"
     local API_RESPONSE=$(curl -s "$API_URL")
     
-    # Cek apakah folder (tag) ada di GitHub
     if [[ "$API_RESPONSE" == *"Not Found"* ]]; then
-        echo "[!] Folder '$TAG' tidak ditemukan di GitHub Anda!"
+        echo "[!] Folder '$TAG' tidak ditemukan atau kosong!"
         sleep 2
         return
     fi
 
-    # 2. Mengekstrak otomatis semua nama file yang berakhiran .apk
     mapfile -t APK_NAMES < <(echo "$API_RESPONSE" | grep -o '"name": "[^"]*\.apk"' | cut -d'"' -f4 | sort)
-    # 3. Mengekstrak otomatis link download aslinya
     mapfile -t APK_URLS < <(echo "$API_RESPONSE" | grep -o '"browser_download_url": "[^"]*\.apk"' | cut -d'"' -f4 | sort)
     
-    # Menghitung otomatis total APK yang ditemukan
     local COUNT=${#APK_NAMES[@]}
     
     if [ "$COUNT" -eq 0 ]; then
-        echo "[!] Tidak ada file .apk yang ditemukan di folder '$TAG_NAME'"
+        echo "[!] Tidak ada file .apk yang ditemukan di folder '$TAG'"
         sleep 2
         return
     fi
 
-    # Tampilkan Menu Isi Folder
     while true; do
         clear
         echo "-----------------------------------"
-        echo "     INSTALL APK ($TAG_NAME)       "
-        echo "-----------------------------------"
-        echo " Ditemukan $COUNT aplikasi otomatis:"
+        echo "     INSTALL APK (Folder: $TAG)    "
         echo "-----------------------------------"
         for (( i=0; i<COUNT; i++ )); do
-            # Menampilkan nama file persis seperti yang diupload di GitHub
             echo "[$((i+1))] ${APK_NAMES[$i]}"
         done
         echo "-----------------------------------"
@@ -93,17 +82,13 @@ menu_apk_list() {
 
         if [[ "$choice" == "0" ]]; then
             break
-            
         elif [[ "${choice,,}" == "a" ]]; then
-            # Pilihan "A" -> Install Semua yang terdeteksi
             for (( i=0; i<COUNT; i++ )); do
                 install_apk "${APK_NAMES[$i]}" "false" "${APK_URLS[$i]}"
             done
             echo ""
             read -p "Semua instalasi selesai! Tekan [ENTER]..." dummy < /dev/tty
-            
         elif [[ "$choice" =~ ^[0-9]+-[0-9]+$ ]]; then
-            # Pilihan Rentang (Contoh: 1-3)
             start=${choice%-*}
             end=${choice#*-}
             if [ "$start" -ge 1 ] && [ "$end" -le "$COUNT" ] && [ "$start" -le "$end" ]; then
@@ -115,34 +100,57 @@ menu_apk_list() {
             else
                 echo "[!] Rentang tidak valid!"; sleep 1
             fi
-            
         elif [[ "$choice" =~ ^[0-9]+$ ]] && [ "$choice" -ge 1 ] && [ "$choice" -le "$COUNT" ]; then
-            # Pilihan Satuan (Contoh: 2)
             idx=$((choice-1))
             install_apk "${APK_NAMES[$idx]}" "true" "${APK_URLS[$idx]}"
-            
         else
             echo "[!] Pilihan tidak dikenali!"; sleep 1
         fi
     done
 }
 
-# --- MENU TINGKAT PERTAMA (PILIH FOLDER/TAG) ---
+# --- FUNGSI TINGKAT 1: MEMBACA FOLDER (TAGS) DARI GITHUB ---
 while true; do
     clear
     echo "-----------------------------------"
     echo "      PILIH SUMBER FOLDER APK      "
     echo "-----------------------------------"
-    echo "[1] Delta Standard (Folder: delta)"
-    echo "[2] Delta A10      (Folder: deltaA10)"
+    echo "[*] Sedang menscan folder di GitHub..."
+    
+    # Membaca daftar semua Release (Folder) yang ada di GitHub Anda
+    RELEASES_API=$(curl -s "https://api.github.com/repos/$REPO/releases")
+    mapfile -t FOLDER_TAGS < <(echo "$RELEASES_API" | grep -o '"tag_name": "[^"]*"' | cut -d'"' -f4)
+    
+    TOTAL_FOLDERS=${#FOLDER_TAGS[@]}
+    
+    if [ "$TOTAL_FOLDERS" -eq 0 ]; then
+        echo "[!] Tidak ada satupun folder/rilis ditemukan di GitHub Anda!"
+        read -p "Tekan [ENTER] untuk kembali..." dummy < /dev/tty
+        break
+    fi
+
+    clear
+    echo "-----------------------------------"
+    echo "      PILIH SUMBER FOLDER APK      "
+    echo "-----------------------------------"
+    echo " Ditemukan $TOTAL_FOLDERS Folder Otomatis:"
+    echo "-----------------------------------"
+    for (( i=0; i<TOTAL_FOLDERS; i++ )); do
+        echo "[$((i+1))] Folder: ${FOLDER_TAGS[$i]}"
+    done
+    echo "-----------------------------------"
     echo "[0] Kembali ke Menu Utama"
     echo "-----------------------------------"
-    read -p "Pilih Folder [0-2]: " folder_choice < /dev/tty
+    
+    read -p "Pilih Folder [0-$TOTAL_FOLDERS]: " folder_choice < /dev/tty
 
-    case $folder_choice in
-        1) menu_apk_list "delta" "Delta Standard" ;;
-        2) menu_apk_list "deltaA10" "Delta A10" ;;
-        0) break ;;
-        *) echo "[!] Pilihan tidak valid"; sleep 1 ;;
-    esac
+    if [[ "$folder_choice" == "0" ]]; then
+        break
+    elif [[ "$folder_choice" =~ ^[0-9]+$ ]] && [ "$folder_choice" -ge 1 ] && [ "$folder_choice" -le "$TOTAL_FOLDERS" ]; then
+        idx=$((folder_choice-1))
+        SELECTED_FOLDER="${FOLDER_TAGS[$idx]}"
+        menu_apk_list "$SELECTED_FOLDER"
+    else
+        echo "[!] Pilihan tidak valid"; sleep 1
+    fi
 done

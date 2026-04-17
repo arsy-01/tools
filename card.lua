@@ -1,5 +1,6 @@
 -- ==========================================
 -- ARSY CONSOLE V2.0 (LIGHTWEIGHT TERMINAL)
+-- RESCALED & DISCORD STATUS NOTIFY
 -- ==========================================
 local Players = game:GetService("Players")
 while not Players.LocalPlayer do task.wait(0.5) end
@@ -17,7 +18,7 @@ local StarterGui = game:GetService("StarterGui")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local req = (syn and syn.request) or (http and http.request) or http_request or (fluxus and fluxus.request) or request
-local guiName = "ArsyTerminal_Light"
+local guiName = "ArsyTerminal_Light_Final"
 
 if getgenv().Arsy_V2_Cleanup then pcall(getgenv().Arsy_V2_Cleanup) end
 local targetParent
@@ -89,8 +90,8 @@ local function applyAAFK()
 end
 
 local PingLabel = Instance.new("TextLabel", ScreenGui)
-PingLabel.Size = UDim2.new(0, 150, 0, 20); PingLabel.Position = UDim2.new(0.5, -75, 0, 10);
-PingLabel.BackgroundTransparency = 1; PingLabel.TextColor3 = Color3.fromHex("#4ec9b0"); PingLabel.Font = Enum.Font.RobotoMono; PingLabel.TextSize = 14; PingLabel.Visible = false
+PingLabel.Size = UDim2.new(0, 180, 0, 25); PingLabel.Position = UDim2.new(0.5, -90, 0, 10);
+PingLabel.BackgroundTransparency = 1; PingLabel.TextColor3 = Color3.fromHex("#4ec9b0"); PingLabel.Font = Enum.Font.RobotoMono; PingLabel.TextSize = 16; PingLabel.Visible = false
 local pingFpsConnection, frameCount, lastUpdate = nil, 0, os.clock()
 local function applyPing()
 	PingLabel.Visible = states.Ping
@@ -329,7 +330,7 @@ local function StartChatRadar()
 end
 
 -- ==========================================
--- 5. DESAIN UI (SIMPLE COLUMN - CODING THEME)
+-- 5. DESAIN UI 
 -- ==========================================
 local scriptConnections = {}
 local function addConnection(connection) table.insert(scriptConnections, connection); return connection end
@@ -342,26 +343,43 @@ local ColorToggleOn = Color3.fromHex("#4ec9b0")
 local ColorStroke = Color3.fromHex("#3e3e42")
 local FontUI = Enum.Font.RobotoMono
 
--- Toggle Widget (Small button to open/close menu)
+-- Toggle Widget
 local ToggleWidget = Instance.new("TextButton", ScreenGui)
-ToggleWidget.Size = UDim2.new(0, 40, 0, 40); ToggleWidget.AnchorPoint = Vector2.new(1, 0.5); ToggleWidget.Position = UDim2.new(1, -10, 0.5, 0); 
-ToggleWidget.BackgroundColor3 = ColorPanel; ToggleWidget.Text = "</>"; ToggleWidget.TextColor3 = ColorAccent; ToggleWidget.Font = FontUI; ToggleWidget.TextSize = 14
+ToggleWidget.Size = UDim2.new(0, 50, 0, 50); ToggleWidget.AnchorPoint = Vector2.new(1, 0.5); ToggleWidget.Position = UDim2.new(1, -10, 0.5, 0); 
+ToggleWidget.BackgroundColor3 = ColorPanel; ToggleWidget.Text = "</>"; ToggleWidget.TextColor3 = ColorAccent; ToggleWidget.Font = FontUI; ToggleWidget.TextSize = 18
 local wStroke = Instance.new("UIStroke", ToggleWidget); wStroke.Color = ColorStroke; wStroke.Thickness = 1
+local ToggleScale = Instance.new("UIScale", ToggleWidget)
 
 -- Main Interface
 local MainFrame = Instance.new("Frame", ScreenGui)
-MainFrame.Size = UDim2.new(0, 650, 0, 350); MainFrame.AnchorPoint = Vector2.new(0.5, 0.5); MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+MainFrame.Size = UDim2.new(0, 815, 0, 440); MainFrame.AnchorPoint = Vector2.new(0.5, 0.5); MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
 MainFrame.BackgroundColor3 = ColorBG; MainFrame.Visible = false; MainFrame.Active = true; MainFrame.Draggable = true
 local mStroke = Instance.new("UIStroke", MainFrame); mStroke.Color = ColorAccent; mStroke.Thickness = 1
+local MenuScale = Instance.new("UIScale", MainFrame)
+
+-- FUNGSI SCALING (DIJALANKAN 1x SAAT AWAL SAJA)
+local function UpdateUIScale()
+	local cam = Workspace.CurrentCamera
+	if not cam then return end
+	local vSize = cam.ViewportSize
+	local baseScale = vSize.Y / 600
+	baseScale = math.clamp(baseScale, 0.4, 1.5)
+	
+	-- Menu di perkecil 20% dari skala standarnya
+	MenuScale.Scale = baseScale * 0.8
+	-- Widget icon dibuat 50% dari skala standarnya
+	ToggleScale.Scale = baseScale * 0.5
+end
+UpdateUIScale()
 
 local TopBar = Instance.new("TextLabel", MainFrame)
-TopBar.Size = UDim2.new(1, 0, 0, 25); TopBar.BackgroundColor3 = ColorPanel; TopBar.Text = " arsy_console_v2.exe"; TopBar.TextColor3 = ColorAccent
-TopBar.Font = FontUI; TopBar.TextSize = 12; TopBar.TextXAlignment = Enum.TextXAlignment.Left
+TopBar.Size = UDim2.new(1, 0, 0, 30); TopBar.BackgroundColor3 = ColorPanel; TopBar.Text = " arsyV2 "; TopBar.TextColor3 = ColorAccent
+TopBar.Font = FontUI; TopBar.TextSize = 15; TopBar.TextXAlignment = Enum.TextXAlignment.Left
 local bStroke = Instance.new("UIStroke", TopBar); bStroke.Color = ColorStroke; bStroke.Thickness = 1
 
 local CloseBtn = Instance.new("TextButton", TopBar)
-CloseBtn.Size = UDim2.new(0, 25, 0, 25); CloseBtn.Position = UDim2.new(1, -25, 0, 0); CloseBtn.BackgroundColor3 = Color3.fromHex("#f44336")
-CloseBtn.Text = "X"; CloseBtn.TextColor3 = Color3.new(1,1,1); CloseBtn.Font = FontUI; CloseBtn.TextSize = 12; CloseBtn.BorderSizePixel = 0
+CloseBtn.Size = UDim2.new(0, 30, 0, 30); CloseBtn.Position = UDim2.new(1, -30, 0, 0); CloseBtn.BackgroundColor3 = Color3.fromHex("#f44336")
+CloseBtn.Text = "X"; CloseBtn.TextColor3 = Color3.new(1,1,1); CloseBtn.Font = FontUI; CloseBtn.TextSize = 15; CloseBtn.BorderSizePixel = 0
 
 local isMenuOpen = false
 addConnection(ToggleWidget.MouseButton1Click:Connect(function() isMenuOpen = not isMenuOpen; MainFrame.Visible = isMenuOpen end))
@@ -369,7 +387,7 @@ addConnection(CloseBtn.MouseButton1Click:Connect(function() isMenuOpen = false; 
 
 -- Columns Container
 local ColumnsContainer = Instance.new("Frame", MainFrame)
-ColumnsContainer.Size = UDim2.new(1, -10, 1, -35); ColumnsContainer.Position = UDim2.new(0, 5, 0, 30); ColumnsContainer.BackgroundTransparency = 1
+ColumnsContainer.Size = UDim2.new(1, -10, 1, -40); ColumnsContainer.Position = UDim2.new(0, 5, 0, 35); ColumnsContainer.BackgroundTransparency = 1
 local ColLayout = Instance.new("UIListLayout", ColumnsContainer)
 ColLayout.FillDirection = Enum.FillDirection.Horizontal; ColLayout.Padding = UDim.new(0, 5)
 
@@ -379,17 +397,21 @@ local function CreateColumn(titleText)
 	local cStr = Instance.new("UIStroke", ColFrame); cStr.Color = ColorStroke; cStr.Thickness = 1
 	
 	local CTitle = Instance.new("TextLabel", ColFrame)
-	CTitle.Size = UDim2.new(1, 0, 0, 20); CTitle.BackgroundTransparency = 1; CTitle.Text = "> " .. titleText; CTitle.TextColor3 = ColorAccent
-	CTitle.Font = FontUI; CTitle.TextSize = 11; CTitle.TextXAlignment = Enum.TextXAlignment.Left
+	CTitle.Size = UDim2.new(1, 0, 0, 25); CTitle.BackgroundTransparency = 1; CTitle.Text = "> " .. titleText; CTitle.TextColor3 = ColorAccent
+	CTitle.Font = FontUI; CTitle.TextSize = 14; CTitle.TextXAlignment = Enum.TextXAlignment.Left
 	local padT = Instance.new("UIPadding", CTitle); padT.PaddingLeft = UDim.new(0, 5)
 	
 	local Divider = Instance.new("Frame", ColFrame)
-	Divider.Size = UDim2.new(1, 0, 0, 1); Divider.Position = UDim2.new(0, 0, 0, 20); Divider.BackgroundColor3 = ColorStroke; Divider.BorderSizePixel = 0
+	Divider.Size = UDim2.new(1, 0, 0, 1); Divider.Position = UDim2.new(0, 0, 0, 25); Divider.BackgroundColor3 = ColorStroke; Divider.BorderSizePixel = 0
 	
 	local Scroll = Instance.new("ScrollingFrame", ColFrame)
-	Scroll.Size = UDim2.new(1, 0, 1, -25); Scroll.Position = UDim2.new(0, 0, 0, 25); Scroll.BackgroundTransparency = 1
+	Scroll.Size = UDim2.new(1, 0, 1, -30); Scroll.Position = UDim2.new(0, 0, 0, 30); Scroll.BackgroundTransparency = 1
 	Scroll.ScrollBarThickness = 3; Scroll.ScrollBarImageColor3 = ColorAccent; Scroll.AutomaticCanvasSize = Enum.AutomaticSize.Y; Scroll.CanvasSize = UDim2.new(0,0,0,0)
-	local SLayout = Instance.new("UIListLayout", Scroll); SLayout.Padding = UDim.new(0, 4)
+	
+	local SLayout = Instance.new("UIListLayout", Scroll)
+	SLayout.Padding = UDim.new(0, 4)
+	SLayout.SortOrder = Enum.SortOrder.LayoutOrder
+	
 	local sPad = Instance.new("UIPadding", Scroll); sPad.PaddingLeft = UDim.new(0, 5); sPad.PaddingRight = UDim.new(0, 5); sPad.PaddingBottom = UDim.new(0, 5)
 	
 	return Scroll
@@ -400,18 +422,19 @@ end
 -- ==========================================
 local function CreateToggle(parent, text, defaultState, callback)
 	local btn = Instance.new("TextButton", parent)
-	btn.Size = UDim2.new(1, 0, 0, 20); btn.BackgroundTransparency = 1; btn.Text = ""; btn.AutoButtonColor = false
+	btn.Size = UDim2.new(1, 0, 0, 25); btn.BackgroundTransparency = 1; btn.Text = ""; btn.AutoButtonColor = false
 	
 	local lbl = Instance.new("TextLabel", btn)
 	lbl.Size = UDim2.new(1, 0, 1, 0); lbl.BackgroundTransparency = 1
-	lbl.Text = (defaultState and "[+] " or "[-] ") .. text
+	lbl.RichText = true
+	lbl.Text = defaultState and ("<b>[+] " .. text .. "</b>") or ("[-] " .. text)
 	lbl.TextColor3 = defaultState and ColorToggleOn or ColorText
-	lbl.Font = FontUI; lbl.TextSize = 10; lbl.TextXAlignment = Enum.TextXAlignment.Left
+	lbl.Font = FontUI; lbl.TextSize = 12; lbl.TextXAlignment = Enum.TextXAlignment.Left
 	
 	local isOn = defaultState
 	addConnection(btn.MouseButton1Click:Connect(function()
 		isOn = not isOn
-		lbl.Text = (isOn and "[+] " or "[-] ") .. text
+		lbl.Text = isOn and ("<b>[+] " .. text .. "</b>") or ("[-] " .. text)
 		lbl.TextColor3 = isOn and ColorToggleOn or ColorText
 		if callback then callback(isOn) end
 	end))
@@ -419,9 +442,9 @@ end
 
 local function CreateButton(parent, text, colorOverride, callback)
 	local btn = Instance.new("TextButton", parent)
-	btn.Size = UDim2.new(1, 0, 0, 20); btn.BackgroundColor3 = colorOverride or ColorBG
+	btn.Size = UDim2.new(1, 0, 0, 25); btn.BackgroundColor3 = colorOverride or ColorBG
 	btn.Text = text; btn.TextColor3 = colorOverride and Color3.new(1,1,1) or ColorAccent
-	btn.Font = FontUI; btn.TextSize = 10; btn.AutoButtonColor = false
+	btn.Font = FontUI; btn.TextSize = 12; btn.AutoButtonColor = false
 	local str = Instance.new("UIStroke", btn); str.Color = ColorStroke; str.Thickness = 1
 	
 	addConnection(btn.MouseButton1Click:Connect(function() 
@@ -432,8 +455,8 @@ end
 
 local function CreateInput(parent, placeholder, defaultVal, callback)
 	local box = Instance.new("TextBox", parent)
-	box.Size = UDim2.new(1, 0, 0, 20); box.BackgroundColor3 = ColorBG; box.Text = defaultVal or ""
-	box.PlaceholderText = placeholder; box.TextColor3 = ColorAccent; box.Font = FontUI; box.TextSize = 10
+	box.Size = UDim2.new(1, 0, 0, 25); box.BackgroundColor3 = ColorBG; box.Text = defaultVal or ""
+	box.PlaceholderText = placeholder; box.TextColor3 = ColorAccent; box.Font = FontUI; box.TextSize = 12
 	box.TextXAlignment = Enum.TextXAlignment.Left; box.ClearTextOnFocus = false; box.TextTruncate = Enum.TextTruncate.AtEnd
 	local str = Instance.new("UIStroke", box); str.Color = ColorStroke; str.Thickness = 1
 	local pad = Instance.new("UIPadding", box); pad.PaddingLeft = UDim.new(0, 4)
@@ -444,8 +467,262 @@ end
 
 local function CreateLabel(parent, text)
 	local lbl = Instance.new("TextLabel", parent)
-	lbl.Size = UDim2.new(1, 0, 0, 15); lbl.BackgroundTransparency = 1; lbl.Text = text; lbl.TextColor3 = Color3.fromHex("#808080")
-	lbl.Font = FontUI; lbl.TextSize = 9; lbl.TextXAlignment = Enum.TextXAlignment.Left
+	lbl.Size = UDim2.new(1, 0, 0, 18); lbl.BackgroundTransparency = 1; lbl.Text = text; lbl.TextColor3 = Color3.fromHex("#808080")
+	lbl.Font = FontUI; lbl.TextSize = 11; lbl.TextXAlignment = Enum.TextXAlignment.Left
+	return lbl
+end
+
+local function CreateCollapsible(parent, title)
+	local frame = Instance.new("Frame", parent)
+	frame.Size = UDim2.new(1, 0, 0, 0)
+	frame.BackgroundTransparency = 1
+	frame.AutomaticSize = Enum.AutomaticSize.Y
+	
+	local rootLayout = Instance.new("UIListLayout", frame)
+	rootLayout.SortOrder = Enum.SortOrder.LayoutOrder
+	
+	local btn = Instance.new("TextButton", frame)
+	btn.Size = UDim2.new(1, 0, 0, 25)
+	btn.BackgroundColor3 = ColorPanel
+	btn.Text = "[>] " .. title
+	btn.TextColor3 = ColorAccent
+	btn.Font = FontUI
+	btn.TextSize = 12
+	btn.TextXAlignment = Enum.TextXAlignment.Left
+	btn.AutoButtonColor = false
+	btn.LayoutOrder = 1
+	local str = Instance.new("UIStroke", btn)
+	str.Color = ColorStroke
+	str.Thickness = 1
+	local pad = Instance.new("UIPadding", btn)
+	pad.PaddingLeft = UDim.new(0, 5)
+	
+	local content = Instance.new("Frame", frame)
+	content.Size = UDim2.new(1, 0, 0, 0)
+	content.BackgroundTransparency = 1
+	content.Visible = false
+	content.AutomaticSize = Enum.AutomaticSize.Y
+	content.LayoutOrder = 2
+	local layout = Instance.new("UIListLayout", content)
+	layout.Padding = UDim.new(0, 4)
+	layout.SortOrder = Enum.SortOrder.LayoutOrder
+	local cPad = Instance.new("UIPadding", content)
+	cPad.PaddingLeft = UDim.new(0, 6)
+	cPad.PaddingTop = UDim.new(0, 4)
+	
+	local isOpen = false
+	addConnection(btn.MouseButton1Click:Connect(function()
+		isOpen = not isOpen
+		btn.Text = (isOpen and "[v] " or "[>] ") .. title
+		content.Visible = isOpen
+	end))
+	
+	return content
+end
+
+local function CreateMultiSelectDropdown(parent, defaultText, dataList, stateMap, callback)
+	local frame = Instance.new("Frame", parent)
+	frame.Size = UDim2.new(1, 0, 0, 0)
+	frame.BackgroundColor3 = ColorBG
+	frame.AutomaticSize = Enum.AutomaticSize.Y
+	local str = Instance.new("UIStroke", frame); str.Color = ColorStroke; str.Thickness = 1
+
+	local rootLayout = Instance.new("UIListLayout", frame)
+	rootLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+	local header = Instance.new("Frame", frame)
+	header.Size = UDim2.new(1, 0, 0, 25)
+	header.BackgroundTransparency = 1
+	header.LayoutOrder = 1
+
+	local btn = Instance.new("TextButton", header)
+	btn.Size = UDim2.new(1, -25, 1, 0)
+	btn.BackgroundTransparency = 1
+	btn.Text = defaultText; btn.TextColor3 = ColorText
+	btn.Font = FontUI; btn.TextSize = 11; btn.TextXAlignment = Enum.TextXAlignment.Left
+	btn.TextTruncate = Enum.TextTruncate.AtEnd
+	local pad = Instance.new("UIPadding", btn); pad.PaddingLeft = UDim.new(0, 5)
+
+	local toggleBtn = Instance.new("TextButton", header)
+	toggleBtn.Size = UDim2.new(0, 25, 1, 0)
+	toggleBtn.Position = UDim2.new(1, -25, 0, 0)
+	toggleBtn.BackgroundTransparency = 1
+	toggleBtn.Text = "v"; toggleBtn.TextColor3 = ColorText
+	toggleBtn.Font = FontUI; toggleBtn.TextSize = 12
+
+	local listCont = Instance.new("Frame", frame)
+	listCont.Size = UDim2.new(1, 0, 0, 0)
+	listCont.BackgroundTransparency = 1
+	listCont.ClipsDescendants = true
+	listCont.LayoutOrder = 2
+
+	local listFrame = Instance.new("ScrollingFrame", listCont)
+	listFrame.Size = UDim2.new(1, 0, 1, 0)
+	listFrame.BackgroundTransparency = 1
+	listFrame.BorderSizePixel = 0
+	listFrame.ScrollBarThickness = 2
+	listFrame.ScrollBarImageColor3 = ColorAccent
+	local listLayout = Instance.new("UIListLayout", listFrame)
+
+	local function updateText()
+		local selected = {}
+		for _, v in ipairs(dataList) do if stateMap[tostring(v.level)] then table.insert(selected, v.name) end end
+		if #selected == 0 then
+			btn.Text = defaultText; btn.TextColor3 = ColorText
+		else
+			btn.Text = " " .. table.concat(selected, ", "); btn.TextColor3 = ColorAccent
+		end
+	end
+	updateText()
+
+	for _, v in ipairs(dataList) do
+		local itemBtn = Instance.new("TextButton", listFrame)
+		itemBtn.Size = UDim2.new(1, 0, 0, 20)
+		itemBtn.BackgroundColor3 = stateMap[tostring(v.level)] and ColorPanel or ColorBG
+		itemBtn.RichText = true
+		itemBtn.Text = stateMap[tostring(v.level)] and ("<b>[+] " .. v.name .. "</b>") or ("[-] " .. v.name)
+		itemBtn.TextColor3 = stateMap[tostring(v.level)] and ColorToggleOn or ColorText
+		itemBtn.Font = FontUI; itemBtn.TextSize = 11; itemBtn.TextXAlignment = Enum.TextXAlignment.Left
+		local ipad = Instance.new("UIPadding", itemBtn); ipad.PaddingLeft = UDim.new(0, 10)
+
+		addConnection(itemBtn.MouseButton1Click:Connect(function()
+			local key = tostring(v.level)
+			stateMap[key] = not stateMap[key]
+			itemBtn.BackgroundColor3 = stateMap[key] and ColorPanel or ColorBG
+			itemBtn.Text = stateMap[key] and ("<b>[+] " .. v.name .. "</b>") or ("[-] " .. v.name)
+			itemBtn.TextColor3 = stateMap[key] and ColorToggleOn or ColorText
+			updateText()
+			if callback then callback() end
+		end))
+	end
+
+	local isOpen = false
+	local function toggle()
+		isOpen = not isOpen
+		toggleBtn.Text = isOpen and "^" or "v"
+		if isOpen then
+			listCont.Size = UDim2.new(1, 0, 0, math.min(#dataList * 20, 120))
+			listFrame.CanvasSize = UDim2.new(0, 0, 0, #dataList * 20)
+		else
+			listCont.Size = UDim2.new(1, 0, 0, 0)
+		end
+	end
+
+	addConnection(btn.MouseButton1Click:Connect(toggle))
+	addConnection(toggleBtn.MouseButton1Click:Connect(toggle))
+
+	return frame
+end
+
+local function CreateSearchableDropdown(parent, placeholder, entries, defaultVal, callback)
+	local frame = Instance.new("Frame", parent)
+	frame.Size = UDim2.new(1, 0, 0, 0)
+	frame.BackgroundColor3 = ColorBG
+	frame.AutomaticSize = Enum.AutomaticSize.Y
+	local str = Instance.new("UIStroke", frame); str.Color = ColorStroke; str.Thickness = 1
+	
+	local rootLayout = Instance.new("UIListLayout", frame)
+	rootLayout.SortOrder = Enum.SortOrder.LayoutOrder
+	
+	local header = Instance.new("Frame", frame)
+	header.Size = UDim2.new(1, 0, 0, 25)
+	header.BackgroundTransparency = 1
+	header.LayoutOrder = 1
+	
+	local box = Instance.new("TextBox", header)
+	box.Size = UDim2.new(1, -25, 1, 0)
+	box.BackgroundTransparency = 1
+	box.Text = defaultVal or ""
+	box.PlaceholderText = placeholder
+	box.TextColor3 = ColorAccent
+	box.Font = FontUI; box.TextSize = 11
+	box.TextXAlignment = Enum.TextXAlignment.Left
+	box.ClearTextOnFocus = true
+	local pad = Instance.new("UIPadding", box); pad.PaddingLeft = UDim.new(0, 5)
+	
+	local toggleBtn = Instance.new("TextButton", header)
+	toggleBtn.Size = UDim2.new(0, 25, 1, 0)
+	toggleBtn.Position = UDim2.new(1, -25, 0, 0)
+	toggleBtn.BackgroundTransparency = 1
+	toggleBtn.Text = "v"; toggleBtn.TextColor3 = ColorText
+	toggleBtn.Font = FontUI; toggleBtn.TextSize = 12
+	
+	local listCont = Instance.new("Frame", frame)
+	listCont.Size = UDim2.new(1, 0, 0, 0)
+	listCont.BackgroundColor3 = ColorPanel
+	listCont.BorderSizePixel = 0
+	listCont.ClipsDescendants = true
+	listCont.LayoutOrder = 2
+	
+	local listFrame = Instance.new("ScrollingFrame", listCont)
+	listFrame.Size = UDim2.new(1, 0, 1, 0)
+	listFrame.BackgroundTransparency = 1
+	listFrame.BorderSizePixel = 0
+	listFrame.ScrollBarThickness = 2
+	listFrame.ScrollBarImageColor3 = ColorAccent
+	local listLayout = Instance.new("UIListLayout", listFrame)
+	
+	local isOpen = false
+	local itemBtns = {}
+	
+	local function filterItems()
+		local query = string.lower(box.Text)
+		local visibleCount = 0
+		for _, item in ipairs(itemBtns) do
+			if query == "" or string.find(item.text, query, 1, true) then
+				item.btn.Visible = true
+				visibleCount = visibleCount + 1
+			else
+				item.btn.Visible = false
+			end
+		end
+		listFrame.CanvasSize = UDim2.new(0, 0, 0, visibleCount * 20)
+		if isOpen then
+			listCont.Size = UDim2.new(1, 0, 0, math.min(visibleCount * 20, 120))
+		end
+	end
+	
+	for _, entry in ipairs(entries) do
+		local btn = Instance.new("TextButton", listFrame)
+		btn.Size = UDim2.new(1, 0, 0, 20)
+		btn.BackgroundTransparency = 1
+		btn.Text = entry
+		btn.TextColor3 = ColorText
+		btn.Font = FontUI; btn.TextSize = 11
+		btn.TextXAlignment = Enum.TextXAlignment.Left
+		local bpad = Instance.new("UIPadding", btn); bpad.PaddingLeft = UDim.new(0, 5)
+		table.insert(itemBtns, {btn = btn, text = string.lower(entry)})
+		
+		addConnection(btn.MouseButton1Click:Connect(function()
+			box.Text = entry
+			isOpen = false
+			toggleBtn.Text = "v"
+			listCont.Size = UDim2.new(1, 0, 0, 0)
+			if callback then callback(entry) end
+		end))
+	end
+	
+	addConnection(box.Focused:Connect(function()
+		isOpen = true
+		toggleBtn.Text = "^"
+		filterItems()
+	end))
+	
+	addConnection(box:GetPropertyChangedSignal("Text"):Connect(function()
+		if box:IsFocused() then filterItems() end
+	end))
+	
+	addConnection(box.FocusLost:Connect(function(enterPressed)
+		if enterPressed then if callback then callback(box.Text) end end
+	end))
+	
+	addConnection(toggleBtn.MouseButton1Click:Connect(function()
+		isOpen = not isOpen
+		toggleBtn.Text = isOpen and "^" or "v"
+		if isOpen then filterItems() else listCont.Size = UDim2.new(1, 0, 0, 0) end
+	end))
+	
+	return frame
 end
 
 -- ==========================================
@@ -468,21 +745,71 @@ CreateButton(ColDash, "Execute Brute FPS", Color3.fromHex("#6a1b1a"), function()
 
 -- [ COL 2 : WEBHOOK ]
 CreateLabel(ColWeb, "-- DISCORD LINK")
-CreateToggle(ColWeb, "Enable Webhook", states.WebhookEnabled, function(s) states.WebhookEnabled = s; triggerAutoSave() end)
+CreateToggle(ColWeb, "Enable Webhook", states.WebhookEnabled, function(s) 
+	states.WebhookEnabled = s; triggerAutoSave() 
+	
+	-- PENGIRIMAN NOTIFIKASI DISCORD KETIKA TOMBOL DI-TOGGLE
+	if states.Webhook ~= "" and string.find(string.lower(states.Webhook), "http") then
+		local notifTitle = s and "🟢 Webhook Connected" or "🔴 Webhook Disconnected"
+		local notifDesc = s and "Arsy Console is now actively monitoring chat." or "Monitoring paused."
+		local notifColor = s and 0x32D74B or 0xFF3B30
+		
+		task.spawn(function()
+			pcall(function() 
+				req({
+					Url = string.gsub(states.Webhook, "%?wait=true", ""), 
+					Method = "POST", 
+					Headers = {["Content-Type"] = "application/json"}, 
+					Body = HttpService:JSONEncode({
+						embeds = {{
+							title = notifTitle, 
+							description = notifDesc, 
+							color = notifColor, 
+							timestamp = DateTime.now():ToIsoDate()
+						}}
+					})
+				}) 
+			end)
+		end)
+	end
+end)
+
 CreateInput(ColWeb, "Webhook URL...", states.Webhook, function(txt) states.Webhook = txt; triggerAutoSave() end)
 
 CreateLabel(ColWeb, " ")
-CreateLabel(ColWeb, "-- TIER FILTER (CLICK)")
-for _, v in ipairs(tierDataList) do
-	CreateToggle(ColWeb, v.name, states.SelectedTiers[tostring(v.level)], function(s) states.SelectedTiers[tostring(v.level)] = s; triggerAutoSave() end)
-end
+CreateLabel(ColWeb, "-- TIER FILTERS")
+CreateMultiSelectDropdown(ColWeb, "Select Tiers...", tierDataList, states.SelectedTiers, function() triggerAutoSave() end)
 
 CreateLabel(ColWeb, " ")
-CreateLabel(ColWeb, "-- EXACT FILTERS")
+
+-- MENU LIPAT UNTUK TARGET IKAN & MUTASI
+local DropdownCustom = CreateCollapsible(ColWeb, "EXACT FILTERS")
+
 for i = 1, 3 do
-	CreateLabel(ColWeb, "Target " .. i)
-	CreateInput(ColWeb, "Fish Name", states.CustomFilters[i].fish, function(txt) states.CustomFilters[i].fish = txt; triggerAutoSave() end)
-	CreateInput(ColWeb, "Mutation Name", states.CustomFilters[i].mut, function(txt) states.CustomFilters[i].mut = txt; triggerAutoSave() end)
+	local TargetContainer = Instance.new("Frame", DropdownCustom)
+	TargetContainer.Size = UDim2.new(1, 0, 0, 0)
+	TargetContainer.BackgroundTransparency = 1
+	TargetContainer.AutomaticSize = Enum.AutomaticSize.Y
+	TargetContainer.LayoutOrder = i 
+	
+	local containerLayout = Instance.new("UIListLayout", TargetContainer)
+	containerLayout.Padding = UDim.new(0, 4)
+	containerLayout.SortOrder = Enum.SortOrder.LayoutOrder
+	
+	local lblTarget = CreateLabel(TargetContainer, "> Target " .. i)
+	lblTarget.RichText = true
+	lblTarget.Text = "<b>> Target " .. i .. "</b>"
+	lblTarget.TextColor3 = ColorToggleOn
+	lblTarget.LayoutOrder = 1
+	
+	local dropFish = CreateSearchableDropdown(TargetContainer, "Select Fish...", fishNamesArray, states.CustomFilters[i].fish, function(val) states.CustomFilters[i].fish = val; triggerAutoSave() end)
+	dropFish.LayoutOrder = 2
+	
+	local dropMut = CreateSearchableDropdown(TargetContainer, "Select Mutation...", knownMutations, states.CustomFilters[i].mut, function(val) states.CustomFilters[i].mut = val; triggerAutoSave() end)
+	dropMut.LayoutOrder = 3
+	
+	local spacer = CreateLabel(TargetContainer, " ") 
+	spacer.LayoutOrder = 4
 end
 
 -- [ COL 3 : CONFIGURATION ]
@@ -529,4 +856,4 @@ task.spawn(function()
 	end)
 end)
 
-print("[Arsy Terminal Light] Executed Perfectly.")
+print("[Arsy Terminal Light - Final Polished] Executed Perfectly.")

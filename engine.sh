@@ -4,12 +4,31 @@ REPO_URL="https://raw.githubusercontent.com/arsy-01/tools/main"
 LAYOUT_URL="$REPO_URL/layout.sh"
 CONFIG_FILE="/sdcard/Download/.vip_link_arsy.txt"
 
+# [BARU] Fungsi untuk menghapus cache secara total saat aplikasi MATI
+hard_clear_cache() {
+    PACKAGES=$(get_roblox_packages)
+    for pkg in $PACKAGES; do
+        echo " -> Membersihkan sisa cache untuk $pkg..."
+        su -c "rm -rf /data/data/$pkg/cache/*" > /dev/null 2>&1
+        su -c "rm -rf /sdcard/Android/data/$pkg/cache/*" > /dev/null 2>&1
+    done
+}
+
+# [DIPERBARUI] Fungsi optimasi yang berjalan tiap 5 menit saat AFK
 drop_android_ram() {
+    # 1. Matikan background apps
     su -c 'am kill-all' > /dev/null 2>&1
+    
+    # 2. Soft Clear Cache (Aman saat aplikasi berjalan 24/7)
+    echo "    [*] Membersihkan system & app caches..."
+    su -c 'pm trim-caches 999999999999999999' > /dev/null 2>&1
+    
+    # 3. Trim RAM aplikasi target
     PACKAGES=$(get_roblox_packages)
     for pkg in $PACKAGES; do
         su -c "cmd activity send-trim-memory $pkg RUNNING_LOW" > /dev/null 2>&1
     done
+    echo "    [v] RAM & Cache teroptimasi."
 }
 
 get_roblox_packages() {
@@ -101,8 +120,6 @@ run_layout_and_engine() {
                 sleep 2
 
                 deploy_lua_script
-                
-                # Command "monkey" dihapus dari sini. Langsung eksekusi layout.
                 execute_layout
                 
                 echo ""
@@ -120,15 +137,17 @@ run_layout_and_engine() {
                 PACKAGES=$(get_roblox_packages)
                 if [ -z "$PACKAGES" ]; then echo "[!] Tidak ada aplikasi Roblox yang terdeteksi!"; sleep 2; continue; fi
 
-                echo "[*] TAHAP 1: Menghentikan semua instance..."
+                echo "[*] TAHAP 1: Menghentikan instance dan membersihkan total Cache..."
                 for pkg in $PACKAGES; do su -c "am force-stop $pkg"; done
                 sleep 2
+                
+                # Menjalankan hard clear cache saat aplikasi mati
+                hard_clear_cache
 
                 echo "[*] TAHAP 2: Deploy Lua Script..."
                 deploy_lua_script
 
                 echo "[*] TAHAP 3: Mengeksekusi Layout Grid dari GitHub..."
-                # Command "monkey" dihapus dari sini juga.
                 execute_layout
                 
                 echo "    Menunggu 15 detik agar aplikasi me-reload di mode Grid..."
@@ -142,16 +161,19 @@ run_layout_and_engine() {
                     sleep 60 
                 done
 
-                echo "[*] Memasuki Mode AFK..."
+                echo "[*] Memasuki Mode AFK (Loop Optimasi & Auto-Clear berjalan)..."
                 sleep 2
 
+                # Menjalankan optimasi pertama kali saat masuk mode AFK
                 drop_android_ram
 
                 trap "echo -e '\n[!] Keluar dari Mode AFK...'; break" INT
                 loop_count=1
                 
+                # Looping 24/7 (Setiap 300 detik / 5 Menit)
                 while true; do
                     sleep 300
+                    echo "--- [Siklus AFK #$loop_count] ---"
                     drop_android_ram
                     ((loop_count++))
                 done

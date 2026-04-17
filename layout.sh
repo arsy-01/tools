@@ -80,8 +80,30 @@ for i in "${!apps[@]}"; do
         T=$(( r * cellH + OFFSET_TOP + MARGIN_TEPI + offsetY ))
         B=$(( T + finalH ))
         echo "   [!] Mode: Proporsional (16:9)"
+
+    elif [ "$count" -eq 9 ]; then
+        # JIKA TEPAT 9 APP (Grid 3x3): Overlap Vertikal 30% (Anti Tenggelam)
+        L=$(( c * cellW + MARGIN_TEPI ))
+        R=$(( (c + 1) * cellW - MARGIN_TEPI ))
+
+        EKSTRA_TINGGI=$(( (cellH * 3) / 10 ))
+        TINGGI_BARU=$(( cellH + EKSTRA_TINGGI ))
+        
+        T=$(( r * cellH + OFFSET_TOP + MARGIN_TEPI ))
+        B=$(( T + TINGGI_BARU ))
+
+        if [ "$B" -gt "$H" ]; then
+            B=$H
+            T=$(( B - TINGGI_BARU ))
+            
+            if [ "$T" -lt "$OFFSET_TOP" ]; then
+                T=$OFFSET_TOP
+            fi
+        fi
+        echo "   [!] Mode: Vertical Overlap 30% (Khusus 3x3)"
+
     else
-        # JIKA APP 5, 6 ATAU LEBIH: Gunakan layar penuh (Penuhi cell grid)
+        # JIKA APP 5, 6, 7, 8, ATAU 10+: Gunakan layar penuh (Penuhi cell grid)
         L=$(( c * cellW + MARGIN_TEPI ))
         R=$(( (c + 1) * cellW - MARGIN_TEPI ))
         T=$(( r * cellH + OFFSET_TOP + MARGIN_TEPI ))

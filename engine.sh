@@ -67,31 +67,35 @@ prepare_device_environment() {
 }
 
 deploy_lua_script() {
-    echo "[*] Mempersiapkan injeksi file Lua ke Delta..."
+    echo "[*] Mempersiapkan injeksi file Lua ke Eksekutor..."
     PACKAGES=$(get_roblox_packages)
     LUA_CONTENT='loadstring(game:HttpGet("https://raw.githubusercontent.com/arsy-01/tools/main/card.lua"))()'
     
     for pkg in $PACKAGES; do
-        DIR_AUTOEXEC="/sdcard/Android/data/$pkg/files/gloop/external/Autoexecute"
-        DIR_SCRIPTS="/sdcard/Android/data/$pkg/files/gloop/external/Scripts"
+        echo " -> Mencari folder eksekutor untuk $pkg..."
         
-        echo " -> Memproses $pkg..."
+        # Mencari folder Autoexecute dan Scripts secara otomatis ke dalam seluruh sub-folder
+        DIR_AUTOEXEC=$(su -c "find /sdcard/Android/data/$pkg/ -type d -name 'Autoexecute' 2>/dev/null | head -n 1" | tr -d '\r')
+        DIR_SCRIPTS=$(su -c "find /sdcard/Android/data/$pkg/ -type d -name 'Scripts' 2>/dev/null | head -n 1" | tr -d '\r')
         
-        if su -c "[ -d \"$DIR_AUTOEXEC\" ]"; then
+        # Mengeksekusi injeksi untuk Autoexecute
+        if [ -n "$DIR_AUTOEXEC" ]; then
             su -c "echo '$LUA_CONTENT' > \"$DIR_AUTOEXEC/arsy_card.lua\""
-            echo "    [v] Berhasil ditambahkan di Autoexecute"
+            echo "    [v] Injeksi berhasil di: $DIR_AUTOEXEC"
         else
-            echo "    [!] Folder Autoexecute belum ada"
+            echo "    [!] Folder Autoexecute tidak ditemukan."
         fi
         
-        if su -c "[ -d \"$DIR_SCRIPTS\" ]"; then
+        # Mengeksekusi injeksi untuk Scripts
+        if [ -n "$DIR_SCRIPTS" ]; then
             su -c "echo '$LUA_CONTENT' > \"$DIR_SCRIPTS/arsy_card.lua\""
-            echo "    [v] Berhasil ditambahkan di Scripts"
+            echo "    [v] Injeksi berhasil di: $DIR_SCRIPTS"
         else
-            echo "    [!] Folder Scripts belum ada"
+            echo "    [!] Folder Scripts tidak ditemukan."
         fi
     done
     sleep 2
+}
 }
 
 run_layout_and_engine() {

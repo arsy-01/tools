@@ -294,7 +294,12 @@ local function checkMessage(rawMsg)
 	end
 
 	if foundBaseName then
-		local playerName = string.match(cleanMsg, "%[Server%]:%s*([^%s]+)") or "Unknown"
+		local playerName = string.match(cleanMsg, "%[.-%]%s*:?%s*(.-)%s+obtained")
+		if not playerName then
+			playerName = string.match(cleanMsg, "^%s*(.-)%s+obtained")
+		end
+		playerName = playerName or "Unknown"
+		
 		local itemStr = string.match(cleanMsg, "obtained%s+an?%s+(.-)%s+with") or ""
 		local chance = string.match(cleanMsg, "with%s+a%s+(.-)%s+chance") or "N/A"
 		local fullFishName, weight = string.match(itemStr, "^(.-)%s*%((.-)%)%s*$"); if not fullFishName then fullFishName = itemStr; weight = "N/A" end
